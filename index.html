@@ -45,7 +45,17 @@ function imprimir(){
 
                     alert("Resultado: " + result);
                     alert("Enviando ticket...");
+printerObj.addTextAlign(printerObj.ALIGN_CENTER);
 
+printerObj.addTextDouble(true, true);
+printerObj.addText("PRUEBA IPHONE\n");
+printerObj.addTextDouble(false, false);
+
+printerObj.addFeedLine(5);
+
+printerObj.addCut(printerObj.CUT_FEED);
+
+printerObj.send();
 printerObj.send();
 
 alert("SEND ejecutado");
