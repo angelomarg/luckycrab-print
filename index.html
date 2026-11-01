@@ -44,7 +44,15 @@ function imprimir(){
                     alert("Entró al callback");
 
                     alert("Resultado: " + result);
+                    alert("Enviando ticket...");
 
+printerObj.send();
+
+alert("SEND ejecutado");
+
+printerObj.onreceive = function(res){
+    alert("Recibido: " + JSON.stringify(res));
+};
                 }
             );
 
