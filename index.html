@@ -18,57 +18,15 @@
 
 <script>
 
-function imprimir(){
+function getParametro(nombre) {
+    const params = new URLSearchParams(window.location.search);
+    return params.get(nombre);
+}
+var htmlRecibo = decodeURIComponent(
+    getParametro("html") || ""
+);
 
-    alert("Inicio");
-
-    var ePosDev = new epson.ePOSDevice();
-
-    ePosDev.connect(
-        "10.140.1.237",
-        8043,
-
-        function(result){
-
-            alert("Conexión: " + result);
-
-            alert("Antes createDevice");
-
-            ePosDev.createDevice(
-                "local_printer",
-                ePosDev.DEVICE_TYPE_PRINTER,
-                {crypto:true, buffer:false},
-
-                function(printerObj, result){
-
-                    alert("Entró al callback");
-
-                    alert("Resultado: " + result);
-                    alert("Enviando ticket...");
-printerObj.addTextAlign(printerObj.ALIGN_CENTER);
-
-printerObj.addTextDouble(true, true);
-printerObj.addText("PRUEBA IPHONE\n");
-printerObj.addTextDouble(false, false);
-
-printerObj.addFeedLine(5);
-
-printerObj.addCut(printerObj.CUT_FEED);
-
-printerObj.send();
-printerObj.send();
-
-alert("SEND ejecutado");
-
-printerObj.onreceive = function(res){
-    alert("Recibido: " + JSON.stringify(res));
-};
-                }
-            );
-
-            alert("Después createDevice");
-        }
-    );
+printerObj.addText(ticket);
 }
 
 </script>
