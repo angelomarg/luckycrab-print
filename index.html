@@ -36,7 +36,7 @@ function imprimir(){
             ePosDev.createDevice(
                 "local_printer",
                 ePosDev.DEVICE_TYPE_PRINTER,
-                {crypto:true, buffer:false},
+                {crypto:false, buffer:false},
 
                 function(printerObj, result){
 
