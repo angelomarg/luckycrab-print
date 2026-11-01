@@ -1,81 +1,34 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="UTF-8">
-    <title>Lucky Crab Epson Test</title>
-
-    <script src="epos-2.27.0.js"></script>
-</head>
-
-<body>
-
-<h1>Lucky Crab</h1>
-
-<button onclick="imprimir()">
-    Imprimir Prueba
-</button>
-
-<script>
-
 function imprimir(){
+
+    alert("Inicio");
 
     var ePosDev = new epson.ePOSDevice();
 
     ePosDev.connect(
         "10.140.1.237",
         8043,
+
         function(result){
 
             alert("Conexión: " + result);
 
-            if(result !== "OK"){
-                return;
-            }
+            alert("Antes createDevice");
 
             ePosDev.createDevice(
                 "local_printer",
                 ePosDev.DEVICE_TYPE_PRINTER,
-                {crypto:false, buffer:false},
+                {crypto:true, buffer:false},
 
                 function(printerObj, result){
 
-                    alert("Impresora: " + result);
+                    alert("Entró al callback");
 
-                    if(result !== "OK"){
-                        return;
-                    }
-
-                    printerObj.addTextAlign(printerObj.ALIGN_CENTER);
-
-                    printerObj.addTextDouble(true, true);
-                    printerObj.addText("LUCKY CRAB\n");
-                    printerObj.addTextDouble(false, false);
-
-                    printerObj.addText("--------------------------------\n");
-                    printerObj.addText("PRUEBA DE IMPRESION\n");
-                    printerObj.addText("TM-m30\n");
-                    printerObj.addText("--------------------------------\n\n");
-
-                    printerObj.addText("Si lees esto,\n");
-                    printerObj.addText("ePOS está funcionando.\n\n");
-
-                    printerObj.addCut(printerObj.CUT_FEED);
-
-                    printerObj.send();
-
-                    alert("Ticket enviado");
+                    alert("Resultado: " + result);
 
                 }
             );
 
+            alert("Después createDevice");
         }
     );
-
 }
-
-</script>
-
-</body>
-
-</html>
