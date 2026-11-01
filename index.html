@@ -13,7 +13,6 @@
 <script>
 
 window.onload = function () {
-
     imprimir();
 };
 
@@ -81,65 +80,35 @@ function imprimir()
 
 function imprimirRecibo(printerObj, htmlRecibo)
 {
-    var logo = new Image();
+    var texto = htmlRecibo;
 
-    logo.onload = function()
+    texto = texto.replace(/<br\s*\/?>/gi,"\n");
+    texto = texto.replace(/<\/tr>/gi,"\n");
+    texto = texto.replace(/<\/td>/gi,"\t");
+    texto = texto.replace(/<\/th>/gi,"\t");
+    texto = texto.replace(/<[^>]*>/g,"");
+
+    printerObj.addTextAlign(
+        printerObj.ALIGN_LEFT
+    );
+
+    printerObj.addText(texto);
+
+    printerObj.addFeedLine(3);
+
+    printerObj.addCut(
+        printerObj.CUT_FEED
+    );
+
+    printerObj.onreceive = function(res)
     {
-        try
-        {
-            printerObj.addImage(
-                logo,
-                0,
-                0,
-                logo.width,
-                logo.height,
-                printerObj.COLOR_1,
-                printerObj.MODE_MONO
-            );
-        }
-        catch(ex)
-        {
-            console.log(ex);
-        }
-
-        printerObj.addFeedLine(1);
-
-        var texto = htmlRecibo;
-
-        texto = texto.replace(/<br\s*\/?>/gi,"\n");
-        texto = texto.replace(/<\/tr>/gi,"\n");
-        texto = texto.replace(/<\/td>/gi,"\t");
-        texto = texto.replace(/<\/th>/gi,"\t");
-        texto = texto.replace(/<[^>]*>/g,"");
-
-        printerObj.addTextAlign(
-            printerObj.ALIGN_LEFT
+        alert(
+            "Resultado: " +
+            JSON.stringify(res)
         );
-
-        printerObj.addText(texto);
-
-        printerObj.addFeedLine(3);
-
-        printerObj.addCut(
-            printerObj.CUT_FEED
-        );
-
-        printerObj.onreceive = function(res)
-        {
-            console.log(res);
-
-            if(res.success)
-            {
-                setTimeout(function(){
-                    window.close();
-                },1000);
-            }
-        };
-
-        printerObj.send();
     };
 
-    logo.src = "logo.png";
+    printerObj.send();
 }
 
 </script>
