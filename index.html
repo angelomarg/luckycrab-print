@@ -1,21 +1,148 @@
 <!DOCTYPE html>
 <html>
 
+<head>
+    <meta charset="UTF-8">
+    <title>Lucky Crab Print</title>
+
+    <script src="epos-2.27.0.js"></script>
+</head>
+
+<body>
+
 <script>
 
-function getParametro(nombre) {
-    const params = new URLSearchParams(window.location.search);
+window.onload = function () {
+
+    imprimir();
+};
+
+function obtenerParametro(nombre)
+{
+    const params = new URLSearchParams(
+        window.location.search
+    );
+
     return params.get(nombre);
 }
-var htmlRecibo = decodeURIComponent(
-    getParametro("html") || ""
-);
 
-printerObj.addText(ticket);
+function imprimir()
+{
+    var htmlRecibo = decodeURIComponent(
+        obtenerParametro("ticket") || ""
+    );
+
+    if(htmlRecibo === "")
+    {
+        alert("No se recibió ticket");
+        return;
+    }
+
+    var ePosDev = new epson.ePOSDevice();
+
+    ePosDev.connect(
+        "10.140.1.237",
+        8043,
+
+        function(result)
+        {
+            if(result !== "OK" &&
+               result !== "SSL_CONNECT_OK")
+            {
+                alert("Conexión: " + result);
+                return;
+            }
+
+            ePosDev.createDevice(
+                "local_printer",
+                ePosDev.DEVICE_TYPE_PRINTER,
+                {
+                    crypto:true,
+                    buffer:false
+                },
+
+                function(printerObj, result)
+                {
+                    if(result !== "OK")
+                    {
+                        alert("Impresora: " + result);
+                        return;
+                    }
+
+                    imprimirRecibo(
+                        printerObj,
+                        htmlRecibo
+                    );
+                }
+            );
+        }
+    );
+}
+
+function imprimirRecibo(printerObj, htmlRecibo)
+{
+    var logo = new Image();
+
+    logo.onload = function()
+    {
+        try
+        {
+            printerObj.addImage(
+                logo,
+                0,
+                0,
+                logo.width,
+                logo.height,
+                printerObj.COLOR_1,
+                printerObj.MODE_MONO
+            );
+        }
+        catch(ex)
+        {
+            console.log(ex);
+        }
+
+        printerObj.addFeedLine(1);
+
+        var texto = htmlRecibo;
+
+        texto = texto.replace(/<br\s*\/?>/gi,"\n");
+        texto = texto.replace(/<\/tr>/gi,"\n");
+        texto = texto.replace(/<\/td>/gi,"\t");
+        texto = texto.replace(/<\/th>/gi,"\t");
+        texto = texto.replace(/<[^>]*>/g,"");
+
+        printerObj.addTextAlign(
+            printerObj.ALIGN_LEFT
+        );
+
+        printerObj.addText(texto);
+
+        printerObj.addFeedLine(3);
+
+        printerObj.addCut(
+            printerObj.CUT_FEED
+        );
+
+        printerObj.onreceive = function(res)
+        {
+            console.log(res);
+
+            if(res.success)
+            {
+                setTimeout(function(){
+                    window.close();
+                },1000);
+            }
+        };
+
+        printerObj.send();
+    };
+
+    logo.src = "logo.png";
 }
 
 </script>
 
 </body>
-
 </html>
