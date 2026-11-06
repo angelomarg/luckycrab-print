@@ -94,7 +94,11 @@ function imprimirRecibo(printerObj, htmlRecibo)
     printerObj.addTextDouble(true, true);
     printerObj.addText("LUCKY CRAB\n");
     printerObj.addTextDouble(false, false);
-
+    
+    printerObj.addTextDouble(true,true);
+    printerObj.addText("TOTAL");
+    printerObj.addTextDouble(false,false);
+    
     printerObj.addText("\n");
     
     printerObj.addText(texto);
@@ -107,10 +111,10 @@ function imprimirRecibo(printerObj, htmlRecibo)
 
     printerObj.onreceive = function(res)
     {
-        alert(
-            "Resultado: " +
-            JSON.stringify(res)
-        );
+        printerObj.onreceive = function(res)
+{
+    console.log(res);
+};
     };
 
     printerObj.send();
