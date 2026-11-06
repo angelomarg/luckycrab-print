@@ -91,7 +91,12 @@ function imprimirRecibo(printerObj, htmlRecibo)
     printerObj.addTextAlign(
         printerObj.ALIGN_CENTER
     );
+    printerObj.addTextDouble(true, true);
+    printerObj.addText("LUCKY CRAB\n");
+    printerObj.addTextDouble(false, false);
 
+    printerObj.addText("\n");
+    
     printerObj.addText(texto);
 
     printerObj.addFeedLine(3);
