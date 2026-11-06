@@ -89,7 +89,7 @@ function imprimirRecibo(printerObj, htmlRecibo)
     texto = texto.replace(/<[^>]*>/g,"");
 
     printerObj.addTextAlign(
-        printerObj.ALIGN_LEFT
+        printerObj.ALIGN_CENTER
     );
 
     printerObj.addText(texto);
