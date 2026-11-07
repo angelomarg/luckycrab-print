@@ -30,6 +30,11 @@ function imprimir()
     var htmlRecibo = decodeURIComponent(
         obtenerParametro("ticket") || ""
     );
+    var logoUrl = decodeURIComponent(
+    obtenerParametro("logo") || ""
+    );
+
+    alert(logoUrl);
 
     if(htmlRecibo === "")
     {
